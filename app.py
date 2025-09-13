@@ -13,6 +13,7 @@ def redirect_to_https():
 def home():
     return flask.render_template('index.html')
 
+
 @app.route('/first')
 def first():
     return flask.render_template('first.html')
@@ -24,6 +25,10 @@ def second():
 @app.route('/third')
 def third():
     return flask.render_template('third.html')
+
+@app.route('/contact')
+def contact():
+    return flask.render_template('contact.html')
 
 if __name__ == '__main__':
     app.run(debug=False)
