@@ -1,7 +1,13 @@
 import flask
-from flask import Flask, template_rendered
+from flask import Flask, template_rendered, request, redirect
 
 app = Flask(__name__)
+
+@app.before_request
+def redirect_to_https():
+    if request.headers.get('X-Forwarded-Proto', 'http') == 'http':
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
 @app.route('/')
 def home():
