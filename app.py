@@ -8,7 +8,6 @@ def redirect_to_https():
     if request.headers.get('X-Forwarded-Proto', 'http') == 'http':
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
-
 @app.route('/')
 def home():
     return flask.render_template('index.html')
