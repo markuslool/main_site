@@ -5,7 +5,6 @@ app = Flask(__name__)
 
 def _is_local_host(hostname: str) -> bool:
     """Return True if hostname corresponds to a localhost address."""
-    # hostname may include port (e.g. "localhost:5000"), so strip it.
     hostname = hostname.split(":")[0]
     return hostname in {"localhost", "127.0.0.1", "::1"}
 
@@ -28,12 +27,12 @@ def redirect_to_https():
       local development.
     - Otherwise, perform a 301 redirect to the HTTPS version of the current URL.
     """
-    # Skip redirect on local development hosts
+    
     host = request.host or ""
     if _is_local_host(host):
         return None
 
-    # Check common proxy header first, falling back to request.is_secure
+    
     xfp = request.headers.get("X-Forwarded-Proto", "")
     if xfp:
         is_secure = xfp.split(",")[0].strip() == "https"
@@ -41,12 +40,12 @@ def redirect_to_https():
         is_secure = request.is_secure
 
     if not is_secure:
-        # Build the HTTPS URL safely: only replace the scheme portion once.
+        
         url = request.url
         if url.startswith("http://"):
             url = "https://" + url[len("http://") :]
         else:
-            # As a fallback, construct from components
+            
             url = request.url.replace("http:", "https:", 1)
         return redirect(url, code=301)
 
@@ -77,8 +76,9 @@ def third():
 def contact():
     return render_template("contact.html")
 
+@app.route("/resume")
+def resume():
+    return render_template("resume.html")
 
 if __name__ == "__main__":
-    # When running locally, binding to 127.0.0.1:5000 is fine; the before_request
-    # guard prevents HTTPS redirects for localhost.
     app.run(host="127.0.0.1", port=5000, debug=False)
